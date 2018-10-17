@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns = "http://www.springframework.org/schema/beans"
+   xmlns:xsi = "http://www.w3.org/2001/XMLSchema-instance"
+   xmlns:aop="http://www.springframework.org/schema/aop"
+   xmlns:tx="http://www.springframework.org/schema/tx"
+   xmlns:lang="http://www.springframework.org/schema/lang"
+   xmlns:context="http://www.springframework.org/schema/context"
+   xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/data/jpa
+       http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
+       http://www.springframework.org/schema/aop 
+       http://www.springframework.org/schema/aop/spring-aop.xsd">
+   
+   <context:annotation-config/>
+   <context:component-scan base-package="com.softeam" />
+   
+   <bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="org.h2.Driver" />
+		<property name="url"
+	value="jdbc:h2:mem:bank;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE" />
+		<property name="username" value="sa" />
+		<property name="password" value="" />
+	</bean>
+		
+ <bean id="entityManagerFactory"
+    class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+    <property name="dataSource" ref="dataSource" />
+    <property name="jpaProperties">
+        <props>
+            <prop key="hibernate.show_sql">true</prop>
+            <prop key="hibernate.hbm2ddl.auto">create</prop>
+            <prop key="hibernate.dialect">org.hibernate.dialect.H2Dialect</prop>
+            <prop key="hibernate.hbm2ddl.import_files">data.sql</prop>
+        </props>
+    </property>
+
+    <property name="persistenceProvider">
+        <bean class="org.hibernate.jpa.HibernatePersistenceProvider"></bean>
+    </property>
+
+</bean>
+  
+   <bean id="transactionManager"
+     class="org.springframework.orm.jpa.JpaTransactionManager">
+       <property name="entityManagerFactory" ref="entityManagerFactory" />    
+   </bean>
+   
+    <jpa:repositories base-package="com.softeam.dao" />
+ <!--    
+    <tx:advice id="serviceTxAdvice" transaction-manager="transactionManager">
+    <tx:attributes>
+      <tx:method name="find*" propagation="REQUIRED"
+        read-only="true" />
+      <tx:method name="*" propagation="REQUIRED" />
+    </tx:attributes>
+
+  </tx:advice>
+
+  <tx:advice id="daoTxAdvice" transaction-manager="txManager">
+    <tx:attributes>
+      <tx:method name="find*" propagation="REQUIRED" />
+      <tx:method name="*" propagation="MANDATORY" />
+    </tx:attributes>
+  </tx:advice>
+
+  <aop:config>
+    <aop:pointcut id="serviceMethodes"
+      expression="execution(*com.softeam.service.*Service.*(..))" />
+    <aop:advisor advice-ref="serviceTxAdvice" pointcut-ref="serviceMethodes" />
+  </aop:config>
+
+  <aop:config>
+    <aop:pointcut id="daoMethodes"
+      expression="execution(*com.softeam.dao.*DAO.*(..))" />
+    <aop:advisor advice-ref="daoTxAdvice" pointcut-ref="daoMethodes" />
+  </aop:config> -->
+   
+   
+   
+ 
+	
+</beans>
