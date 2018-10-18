@@ -1,0 +1,1 @@
+insert into tbl_client(id_clt,clt_name) values (1,'abdelaziz');
